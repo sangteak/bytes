@@ -16,6 +16,7 @@
 #include <type_traits>
 #include <boost/endian/conversion.hpp>
 #include <fmt/format.h>
+#include "Endian.h"
 
 namespace bytes {
 /// @brief 불변(immutable) 바이트 배열을 나타냅니다.
@@ -24,6 +25,7 @@ namespace bytes {
 ///
 /// @warning
 /// 이 클레스는 쓰레드 안전하지 않습니다.
+template <EndianKind kind>
 class BytesView {
 public:
 	BytesView() = default;
@@ -132,7 +134,8 @@ private:
 		if (Remaining() < sizeof(T)) {
 			throw std::runtime_error(fmt::format("the number of requested bytes ({}) exceeds the number of remaining bytes ({})", Remaining(), sizeof(T)));
 		}
-		T value = boost::endian::big_to_native(*reinterpret_cast<T*>(pointer_ + pos_));
+		// T value = boost::endian::big_to_native(*reinterpret_cast<T*>(pointer_ + pos_));
+		T value = from_endian<T, kind>(*reinterpret_cast<T*>(pointer_ + pos_));
 
 		Advance(sizeof(T));
 

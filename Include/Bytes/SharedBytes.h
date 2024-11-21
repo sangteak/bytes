@@ -17,6 +17,7 @@ namespace bytes {
 /// @details
 /// 해당 클래스는 불변 데이터를 참조 카운터(std::shared_ptr)를 이용하여 여러 쓰레드에 불변 데이터를
 /// 안전하게 공유하고, BytesView를 통해 해당 데이터를 안전하게 읽도록 도와줍니다.
+template <EndianKind kind>
 class SharedBytes {
 public:
 	SharedBytes() = delete;
@@ -35,12 +36,12 @@ public:
 	SharedBytes& operator=(SharedBytes&& other) noexcept = default;
 
 	/// @brief 읽기 데이터를 BytesView에 담아 반환합니다.
-	BytesView AsRef() {
+	BytesView<kind> AsRef() {
 		if (data_ == nullptr) {
-			return BytesView();
+			return BytesView<kind>();
 		}
 
-		return BytesView(data_.get(), length_);
+		return BytesView<kind>(data_.get(), length_);
 	}
 
 private:

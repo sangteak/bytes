@@ -28,6 +28,7 @@ namespace bytes {
 /// - 효율성
 /// 읽기 위치와 쓰기 위치를 관리하도록 하였습니다. 데이터를 읽더라도 데이터를 이동하지 않고, 읽기 위치를 조정하여 비용을 절약하였으며,
 /// 쓰기 시 메모리가 부족할 경우 Compact 기능을 호출하여 단편화된 블록을 제거하도록 하였습니다. 이를 통해 메모리 블록을 효율적으로 운영합니다.
+template <EndianKind kind>
 class MutableBytes {
 public:
 	MutableBytes() = default;
@@ -131,8 +132,8 @@ public:
 	}
 
 	/// @brief 읽기 데이터를 BytesView에 담아 반환합니다.
-	BytesView AsRef() {
-		return BytesView(&buf_[front_pos_], Length());
+	BytesView<kind> AsRef() {
+		return BytesView<kind>(&buf_[front_pos_], Length());
 	}
 
 private:
@@ -141,7 +142,8 @@ private:
 		// 필요할 경우 단편화를 제거하여 공간을 확보한다.
 		Compact(sizeof(value));
 
-		auto endian_value = boost::endian::native_to_big(value);
+		auto endian_value = to_endian<T, kind>(value);
+		// auto endian_value = boost::endian::native_to_big(value);
 		uint8_t* pointer = reinterpret_cast<uint8_t*>(&endian_value);
 		constexpr size_t count = sizeof(value);
 		buf_.insert(buf_.end(), pointer, pointer + count);

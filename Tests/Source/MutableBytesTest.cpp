@@ -5,7 +5,7 @@
 TEST(MutableBytesTests, PutI8) {
 	int8_t value = 0x02;
 
-	bytes::MutableBytes buf(10);
+	bytes::MutableBytes<bytes::EndianKind::Big> buf(10);
 	EXPECT_EQ(buf.IsEmpty(), true);
 
 	buf.PutI8(value);
@@ -21,7 +21,7 @@ TEST(MutableBytesTests, PutI8) {
 TEST(MutableBytesTests, PutU8) {
 	uint8_t value = 0xFF;
 
-	bytes::MutableBytes buf(10);
+	bytes::MutableBytes<bytes::EndianKind::Big> buf(10);
 	EXPECT_EQ(buf.IsEmpty(), true);
 
 	buf.PutU8(value);
@@ -37,7 +37,7 @@ TEST(MutableBytesTests, PutU8) {
 TEST(MutableBytesTests, PutI16) {
 	int16_t value = -10000;
 
-	bytes::MutableBytes buf(10);
+	bytes::MutableBytes<bytes::EndianKind::Big> buf(10);
 	EXPECT_EQ(buf.IsEmpty(), true);
 
 	buf.PutI16(value);
@@ -53,7 +53,7 @@ TEST(MutableBytesTests, PutI16) {
 TEST(MutableBytesTests, PutU16) {
 	uint16_t value = 10000;
 
-	bytes::MutableBytes buf(10);
+	bytes::MutableBytes<bytes::EndianKind::Big> buf(10);
 	EXPECT_EQ(buf.IsEmpty(), true);
 
 	buf.PutU16(value);
@@ -69,7 +69,7 @@ TEST(MutableBytesTests, PutU16) {
 TEST(MutableBytesTests, PutI32) {
 	int32_t value = -10000000;
 
-	bytes::MutableBytes buf(10);
+	bytes::MutableBytes<bytes::EndianKind::Big> buf(10);
 	EXPECT_EQ(buf.IsEmpty(), true);
 
 	buf.PutI32(value);
@@ -85,7 +85,7 @@ TEST(MutableBytesTests, PutI32) {
 TEST(MutableBytesTests, PutU32) {
 	uint32_t value = 10000000;
 
-	bytes::MutableBytes buf(10);
+	bytes::MutableBytes<bytes::EndianKind::Big> buf(10);
 	EXPECT_EQ(buf.IsEmpty(), true);
 
 	buf.PutU32(value);
@@ -101,7 +101,7 @@ TEST(MutableBytesTests, PutU32) {
 TEST(MutableBytesTests, PutI64) {
 	int64_t value = -10000000000;
 
-	bytes::MutableBytes buf(10);
+	bytes::MutableBytes<bytes::EndianKind::Big> buf(10);
 	EXPECT_EQ(buf.IsEmpty(), true);
 
 	buf.PutI64(value);
@@ -117,7 +117,7 @@ TEST(MutableBytesTests, PutI64) {
 TEST(MutableBytesTests, PutU64) {
 	uint64_t value = 10000000000;
 
-	bytes::MutableBytes buf(10);
+	bytes::MutableBytes<bytes::EndianKind::Big> buf(10);
 	EXPECT_EQ(buf.IsEmpty(), true);
 
 	buf.PutU64(value);
@@ -133,7 +133,7 @@ TEST(MutableBytesTests, PutU64) {
 TEST(MutableBytesTests, PutFloat) {
 	float value = -30.123f;
 
-	bytes::MutableBytes buf(10);
+	bytes::MutableBytes<bytes::EndianKind::Big> buf(10);
 	EXPECT_EQ(buf.IsEmpty(), true);
 
 	buf.PutFloat(value);
@@ -149,7 +149,7 @@ TEST(MutableBytesTests, PutFloat) {
 TEST(MutableBytesTests, PutDouble) {
 	double value = -30.123f;
 
-	bytes::MutableBytes buf(10);
+	bytes::MutableBytes<bytes::EndianKind::Big> buf(10);
 	EXPECT_EQ(buf.IsEmpty(), true);
 
 	buf.PutDouble(value);
@@ -165,7 +165,7 @@ TEST(MutableBytesTests, PutDouble) {
 TEST(MutableBytesTests, PutMultipleValues) {
 	auto values = std::make_tuple(int32_t(30), int64_t(9800));
 
-	bytes::MutableBytes buf(10);
+	bytes::MutableBytes<bytes::EndianKind::Big> buf(10);
 	EXPECT_EQ(buf.IsEmpty(), true);
 
 	buf.PutI32(std::get<0>(values));
@@ -176,7 +176,7 @@ TEST(MutableBytesTests, PutMultipleValues) {
 }
 
 TEST(MutableBytesTests, Compact) {
-	bytes::MutableBytes buf(10);
+	bytes::MutableBytes<bytes::EndianKind::Big> buf(10);
 	EXPECT_EQ(buf.Capacity(), 10);
 	EXPECT_EQ(buf.IsEmpty(), true);
 	EXPECT_EQ(buf.Length(), 0);
