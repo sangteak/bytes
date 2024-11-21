@@ -1,3 +1,11 @@
+/// @file SharedBytes.h
+/// @author stkwon (sangtakeg@gmail.com)
+/// @brief 공유 가능한 불변(immutable) 바이트 배열을 나타냅니다.
+/// @version 0.1
+/// @date 2024-11-21
+///
+/// @copyright Copyright (c) 2024
+///
 #ifndef BYTES_SHAREDBYTES_H_
 #define BYTES_SHAREDBYTES_H_
 
@@ -5,6 +13,10 @@
 #include "BytesView.h"
 
 namespace bytes {
+/// @brief 불변 데이터를 공유 할 수 있는 기능을 포함합니다.
+/// @details
+/// 해당 클래스는 불변 데이터를 참조 카운터(std::shared_ptr)를 이용하여 여러 쓰레드에 불변 데이터를
+/// 안전하게 공유하고, BytesView를 통해 해당 데이터를 안전하게 읽도록 도와줍니다.
 class SharedBytes {
 public:
 	SharedBytes() = delete;
@@ -22,6 +34,7 @@ public:
 	SharedBytes& operator=(const SharedBytes& other) = default;
 	SharedBytes& operator=(SharedBytes&& other) noexcept = default;
 
+	/// @brief 읽기 데이터를 BytesView에 담아 반환합니다.
 	BytesView AsRef() {
 		if (data_ == nullptr) {
 			return BytesView();

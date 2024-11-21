@@ -1,3 +1,11 @@
+/// @file BytesView.h
+/// @author stkwon (sangtakeg@gmail.com)
+/// @brief 불변(immutable) 바이트 배열을 나타냅니다.
+/// @version 0.1
+/// @date 2024-11-21
+///
+/// @copyright Copyright (c) 2024
+///
 #ifndef BYTES_BYTES_H_
 #define BYTES_BYTES_H_
 
@@ -10,40 +18,49 @@
 #include <fmt/format.h>
 
 namespace bytes {
-/**
- * @brief 불변(immutable) 바이트 배열을 나타냅니다.
- * @details
- * 주로 읽기 전용 데이터에 사용되며, 메모리에서 효율적으로 공유할 수 있도록 설계되었습니다.
- *
- * 특징
- * - 불변성: Bytes는 생성된 후 변경할 수 없습니다. 이는 쓰레드 안정성을 확보하고, 완성된 데이터에 대한
- * 변경을 차단하여 데이터를 안전하게 사용할 수 있도록 합니다.
- * - 메모리 공유: Bytes가 대입될 경우 데이터를 복제하지 않고 참조 카운트를 통해 얕은 복사를 수행합니다.
- * 이를 통해 여러 쓰레드에 공유되었을 경우에도 메모리 사용을 최적화할 수 있습니다.
- */
+/// @brief 불변(immutable) 바이트 배열을 나타냅니다.
+/// @details
+/// MutableBytes와 SharedBytes의 데이터를 안전하게 읽기 위한 기능을 포함합니다.
+///
+/// @warning
+/// 이 클레스는 쓰레드 안전하지 않습니다.
 class BytesView {
 public:
 	BytesView() = default;
 	~BytesView() = default;
 
+	/// @brief 주어진 인수를 이용해 BytesView를 생성합니다.
+	/// @param data 데이터 포인터
+	/// @param length 데이터 길이
+	/// @warning
+	/// 내부적으로 복사 없이 전달된 data 인수를 참조하여 사용합니다. 그러므로 BytesView 사용이 끝나기 전까지 해당 포인터를
+	/// 해제해서는 안됩니다.
 	explicit BytesView(uint8_t* data, size_t length)
 		: pointer_(data)
 		, length_(length) {
 	}
 
+	/// @brief 읽을 수 있는 데이터 길이를 반환합니다.
+	/// @return 읽을 수 있는 데이터 길이
 	size_t Remaining() {
 		static const size_t min_value = 0;
 		return std::max(min_value, length_ - pos_);
 	}
 
+	/// @brief 시작 위치를 기준으로 pos로 이동합니다.
+	/// @param pos offset
+	/// @throw 주어진 pos가 유효 범위를 벗어난 경우 std::runtime_error를 throw 합니다.
 	void Seek(size_t pos) {
-		if (length_ < pos) {
+		if (pos < 0 || length_ < pos) {
 			throw std::runtime_error(fmt::format("the requested position ({}) exceeds the total length ({})", Remaining(), pos));
 		}
 
 		pos_ = pos;
 	}
 
+	/// @brief 현재 읽기 위치를 기준으로 cnt 만큼 이동시킵니다.
+	/// @param pos offset
+	/// @throw 주어진 cnt가 유효 범위를 벗어난 경우 std::runtime_error를 throw 합니다.
 	void Advance(size_t cnt) {
 		if (Remaining() < cnt) {
 			throw std::runtime_error(fmt::format("the number of requested bytes ({}) exceeds the number of remaning bytes ({})", Remaining(), cnt));
@@ -52,48 +69,59 @@ public:
 		pos_ += cnt;
 	}
 
+	/// @brief 1바이트를 읽고, Endian을 변경 후 uint8_t 값을 반환합니다.
 	uint8_t GetU8() {
 		return Get<uint8_t>();
 	}
 
+	/// @brief 1바이트를 읽고, Endian을 변경 후 int8_t 값을 반환합니다.
 	int8_t GetI8() {
 		return Get<int8_t>();
 	}
 
+	/// @brief 2바이트를 읽고, Endian을 변경 후 uint16_t 값을 반환합니다.
 	uint16_t GetU16() {
 		return Get<uint16_t>();
 	}
 
+	/// @brief 2바이트를 읽고, Endian을 변경 후 int16_t 값을 반환합니다.
 	int16_t GetI16() {
 		return Get<int16_t>();
 	}
 
+	/// @brief 4바이트를 읽고, Endian을 변경 후 uint32_t 값을 반환합니다.
 	uint32_t GetU32() {
 		return Get<uint32_t>();
 	}
 
+	/// @brief 4바이트를 읽고, Endian을 변경 후 int32_t 값을 반환합니다.
 	int32_t GetI32() {
 		return Get<int32_t>();
 	}
 
+	/// @brief 8바이트를 읽고, Endian을 변경 후 uint64_t 값을 반환합니다.
 	uint64_t GetU64() {
 		return Get<uint64_t>();
 	}
 
+	/// @brief 8바이트를 읽고, Endian을 변경 후 int64_t 값을 반환합니다.
 	int64_t GetI64() {
 		return Get<int64_t>();
 	}
 
+	/// @brief 4바이트를 읽고, Endian을 변경 후 float 값을 반환합니다.
 	float_t GetFloat() {
 		auto u32_value = GetU32();
 		return *reinterpret_cast<float_t*>(&u32_value);
 	}
 
+	/// @brief 8바이트를 읽고, Endian을 변경 후 double 값을 반환합니다.
 	double_t GetDouble() {
 		auto u64_value = GetU64();
 		return *reinterpret_cast<double_t*>(&u64_value);
 	}
 
+	/// @brief 읽기 위치 포인터를 반환합니다.
 	const uint8_t* GetData() const {
 		return pointer_ + pos_;
 	}
