@@ -1,0 +1,33 @@
+# .editorconfig에 대해 자세히 알아보려면 다음을 참조하세요. https://aka.ms/editorconfigdocs
+root = true
+
+# All files
+[*]
+charset = utf-8
+indent_style = tab
+
+# Xml files
+[*.xml]
+indent_size = 4
+
+# c / cpp / h / hpp / etc setting
+[*.{c++,cc,cpp,cxx,h,h++,hh,hpp,hxx,inl,ipp,tlh,tli}]
+
+# code style settings
+cpp_generate_documentation_comments = doxygen_triple_slash
+
+# formatting settings
+cpp_indent_namespace_contents = false
+cpp_indent_case_contents = true
+cpp_indent_case_labels = true
+cpp_indent_case_contents_when_block = false
+
+cpp_new_line_before_open_brace_namespace = same_line
+cpp_new_line_before_open_brace_type = same_line
+cpp_new_line_before_open_brace_function = same_line
+cpp_new_line_before_open_brace_block = same_line
+cpp_new_line_before_open_brace_lambda = same_line
+cpp_new_line_before_catch = true
+cpp_new_line_before_else = true
+cpp_new_line_before_while_in_do_while = false
+indent_size = 4
