@@ -1,0 +1,32 @@
+name: CI
+on: 
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  check-compile-flags:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install build-essentials
+        run: sudo apt-get install -y gcc cmake make
+
+      - name: Install Conan profiles
+        run: |
+          conan profile detect
+          echo \[settings\] > ~/.conan2/profiles/default
+          echo arch=x86_64 >> ~/.conan2/profiles/default
+          echo build_type=Release >> ~/.conan2/profiles/default
+          echo compiler=gcc >> ~/.conan2/profiles/default
+          echo compiler.cppstd=gnu17 >> ~/.conan2/profiles/default
+          echo compiler.libcxx=libstdc++ >> ~/.conan2/profiles/default
+          echo compiler.version=9 >> ~/.conan2/profiles/default
+          echo os=Linux >> ~/.conan2/profiles/default
+
+      - name: Install Conan
+        run: |
+          conan install . --build=missing --settings=build_type=Debug
+          conan install . --build=missing --settings=build_type=Release 
