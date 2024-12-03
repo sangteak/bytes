@@ -22,6 +22,7 @@ jobs:
         run: |
           sudo pip install conan
           conan profile detect
+          mv ~/.conan2/profiles/default ~/.conan2/profiles/default.bak -y
           echo \[settings\] > ~/.conan2/profiles/default
           echo arch=x86_64 >> ~/.conan2/profiles/default
           echo build_type=Release >> ~/.conan2/profiles/default
