@@ -22,17 +22,9 @@ jobs:
         run: |
           sudo pip install conan
           conan profile detect
-          rm -f ~/.conan2/profiles/default
-          echo \[settings\] > ~/.conan2/profiles/default
-          echo arch=x86_64 >> ~/.conan2/profiles/default
-          echo build_type=Release >> ~/.conan2/profiles/default
-          echo compiler=gcc >> ~/.conan2/profiles/default
-          echo compiler.cppstd=gnu17 >> ~/.conan2/profiles/default
-          echo compiler.libcxx=libstdc++11 >> ~/.conan2/profiles/default
-          echo compiler.version=9 >> ~/.conan2/profiles/default
-          echo os=Linux >> ~/.conan2/profiles/default
-          conan install . --build=missing --settings=build_type=Debug
-          conan install . --build=missing --settings=build_type=Release
+          sed -i 's/gnu17/gnu11/g ~/.conan2/profiles/default
+          #conan install . --build=missing --settings=build_type=Debug
+          #conan install . --build=missing --settings=build_type=Release
 
       #- name: Install Conan profiles
       #  run: |
