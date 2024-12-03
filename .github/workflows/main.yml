@@ -21,20 +21,19 @@ jobs:
           pip install conan
           source ~/.profile
 
-      - name: Install Conan profiles
-        run: |
-          conan profile detect
-          echo \[settings\] > ~/default
-          echo arch=x86_64 >> ~/default
-          echo build_type=Release >> ~/default
-          echo compiler=gcc >> ~/default
-          echo compiler.cppstd=gnu17 >> ~/default
-          echo compiler.libcxx=libstdc++ >> ~/default
-          echo compiler.version=9 >> ~/default
-          echo os=Linux >> ~/default
+      #- name: Install Conan profiles
+      #  run: |
+      #    conan profile detect
+      #    echo \[settings\] > ~/default
+      #    echo arch=x86_64 >> ~/default
+      #    echo build_type=Release >> ~/default
+      #    echo compiler=gcc >> ~/default
+      #    echo compiler.cppstd=gnu17 >> ~/default
+      #    echo compiler.libcxx=libstdc++ >> ~/default
+      #    echo compiler.version=9 >> ~/default
+      #    echo os=Linux >> ~/default
 
       - name: Install Conanfile.py
         run: |
-          echo "pwd:"
-          echo `pwd`'
-          
+          conan install . --build=missing --settings=build_type=Debug
+          conan install . --build=missing --settings=build_type=Release
