@@ -35,5 +35,6 @@ jobs:
 
       - name: Install Conanfile.py
         run: |
-          conan install . --build=missing --settings=build_type=Debug
-          conan install . --build=missing --settings=build_type=Release 
+          pwd
+          # conan install . --build=missing --settings=build_type=Debug
+          # conan install . --build=missing --settings=build_type=Release 
