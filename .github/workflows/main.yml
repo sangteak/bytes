@@ -13,13 +13,15 @@ jobs:
 
       - name: Install build-essentials
         run: |
-          sudo apt update
-          sudo apt-get install -y gcc cmake make python3-pip
+          apt update
+          apt-get install -y gcc cmake make python3-pip
 
       - name: Install conan2.x
         run: |
           pip install conan
-          source ~/.profile
+          conan --version
+          conan install . --build=missing --settings=build_type=Debug
+          conan install . --build=missing --settings=build_type=Release
 
       #- name: Install Conan profiles
       #  run: |
@@ -32,8 +34,4 @@ jobs:
       #    echo compiler.libcxx=libstdc++ >> ~/default
       #    echo compiler.version=9 >> ~/default
       #    echo os=Linux >> ~/default
-
-      - name: Install Conanfile.py
-        run: |
-          conan install . --build=missing --settings=build_type=Debug
-          conan install . --build=missing --settings=build_type=Release
+      
