@@ -24,15 +24,17 @@ jobs:
       - name: Install Conan profiles
         run: |
           conan profile detect
-          echo \[settings\] > ~/.conan2/profiles/default
-          echo arch=x86_64 >> ~/.conan2/profiles/default
-          echo build_type=Release >> ~/.conan2/profiles/default
-          echo compiler=gcc >> ~/.conan2/profiles/default
-          echo compiler.cppstd=gnu17 >> ~/.conan2/profiles/default
-          echo compiler.libcxx=libstdc++ >> ~/.conan2/profiles/default
-          echo compiler.version=9 >> ~/.conan2/profiles/default
-          echo os=Linux >> ~/.conan2/profiles/default
+          echo \[settings\] > ~/default
+          echo arch=x86_64 >> ~/default
+          echo build_type=Release >> ~/default
+          echo compiler=gcc >> ~/default
+          echo compiler.cppstd=gnu17 >> ~/default
+          echo compiler.libcxx=libstdc++ >> ~/default
+          echo compiler.version=9 >> ~/default
+          echo os=Linux >> ~/default
 
       - name: Install Conanfile.py
-        run: echo `pwd`
+        run: |
+          echo "pwd:"
+          echo `pwd`'
           
