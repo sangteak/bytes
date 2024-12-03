@@ -23,7 +23,7 @@ jobs:
           sudo pip install conan
           rm -f ~/.conan2/profiles/default
           conan profile detect
-          sed -i 's/gnu17/gnu11/g ~/.conan2/profiles/default
+          sed -i 's/gnu14/gnu17/g ~/.conan2/profiles/default
           #conan install . --build=missing --settings=build_type=Debug
           #conan install . --build=missing --settings=build_type=Release
 
