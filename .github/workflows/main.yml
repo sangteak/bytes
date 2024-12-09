@@ -24,7 +24,7 @@ jobs:
           rm -f ~/.conan2/profiles/default
           conan profile detect
           sed -i -E 's/gnu[0-9]{2}/gnu17/g' ~/.conan2/profiles/default
-          # conan install . --build=missing --settings=build_type=Debug
+          conan install . --build=missing --settings=build_type=Debug
           # conan install . --build=missing --settings=build_type=Release
 
       #- name: Install Conan profiles
