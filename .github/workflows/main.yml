@@ -28,3 +28,10 @@ jobs:
           source ./build/Debug/generators/conanrun.sh
           conan install . --build=missing --settings=build_type=Release
           source ./build/Release/generators/conanrun.sh
+
+      - name: Build&Tests
+        if: success()
+        run: |
+          cmake --preset conan-debug
+          cmake --build --preset conan-debug
+          ./build/Debug/Tests/Tests
