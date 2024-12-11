@@ -25,14 +25,14 @@ jobs:
           conan profile detect
           sed -i -E 's/gnu[0-9]{2}/gnu17/g' ~/.conan2/profiles/default
           conan install . --build=missing --settings=build_type=Debug
-          source ./build/Debug/generators/conanrun.sh
           conan install . --build=missing --settings=build_type=Release
-          source ./build/Release/generators/conanrun.sh
 
       # build
       - name: Build&Tests
         if: success()
         run: |
+          source ./build/Debug/generators/conanrun.sh
+          source ./build/Release/generators/conanrun.sh
           cmake --preset conan-debug
           cmake --build --preset conan-debug
           ./build/Debug/Tests/Tests
