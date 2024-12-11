@@ -164,12 +164,20 @@ cmake --list-presets
 
 결과: `conan install`에 의해 생성된 `conan-default`가 출력됩니다.
 
+컴파일러 MSVC 사용 시
 ```
 Available configure presets:
 
   "conan-default" - 'conan-default' config
 ```
+gcc 사용 시
+```
+Available configure presets:
 
+  "conan-debug"   - 'conan-debug' config
+  "conan-release" - 'conan-release' config
+```
+ 
 다음으로 이용 가능한 `Build Presets`를 조회합니다.
 
 ```powershell
@@ -191,14 +199,91 @@ Available build presets:
 cmake --build --preset <build preset>
 ```
 
-`conan-debug`와 `conan-release` 빌드를 위한 명령은 다음과 같습니다.
+Configure Preset을 `conan-default`로 설정하고, `conan-debug`와 `conan-release` 빌드를 위한 명령은 다음과 같습니다.
 
+msvc를 사용할 경우 
 ```powershell
+cmake --prset conan-default
 cmake --build --preset conan-debug
 cmake --build --preset conan-release
 ```
 
+gcc를 사용할 경우
+```bash
+cmake --preset conan-debug
+cmake --build --preset conan-debug
 
+cmake --preset conan-release
+cmake --build --preset conan-release
+```
+
+### 4) Ubuntu CMake 수동 설치
+apt repository를 확인했을 때 CMake의 버전이 3.30 이하일 경우 CMake를 수동 설치해야 할 수 있습니다. 수동 설치 방법은 다음과 같습니다.
+
+CMake 설치를 위해 OpenSSL을 설치합니다.
+```bash
+sudo apt update
+sudo apt install openssl libssl-dev
+```
+  
+CMake 빌드를 위해 소스코드를 받아 `/usr/local`로 복사한다. 소스 코드는 [여기](https://cmake.org/download/)를 참고한다.
+```bash
+wget https://github.com/Kitware/CMake/releases/download/v_<latest_version>/cmake-<latest_version>.tar.gz
+tar -zxvf cmake-<latest_version>.tar.gz
+cp -r cp cmake-<latest_version> /usr/local
+cp /usr/local/cmake-<latest_version>
+```
+
+CMake를 빌드 후 설치합니다.
+```bash
+cd /usr/loca/cmake-<latest_version>
+sudo ./bootstrap
+sudo make
+sudo make install
+sudo ln -s /usr/local/cmake-<latest_version>/bin/cmake /usr/loca/bin/cmake
+```
+
+CMake 버전 확인
+```bash
+camek --version
+```
+
+### 5) conan profile 수정을 통해 C++ 표준 버전 지정 방법
+다음 명령을 통해 conan default profile을 생성할 수 있습니다.
+```bash
+conan profile detect
+```
+해당 명령이 실행되면 현재 시스템 환경에 따라 `~/.conan2/profile/default` 파일을 생성합니다. 이때 C++ 표준 버전을 명시적으로 올리려면 다음과 같이 값을 수정해줘야합니다.
+
+Windows:
+MSVC를 사용할 경우 `compiler.cppstd`의 값을 변경하여 버전을 지정하고, Visual Studio 버전 설정이 필요한 경우 `compiler.version`을 지정할 수 있습니다. `msvc 버전`은 [여기](https://learn.microsoft.com/ko-kr/cpp/overview/compiler-versions?view=msvc-170)서 확인 가능합니다.
+
+다음은 MSC 버전은 `Visual Studio 2022 Version 17.10`의 컴파일러 버전인 194를 사용하였으며, C++ 표준 버전은 C++17로 지정하였습니다.
+```
+[settings]
+arch=x86_64
+build_type=Release
+compiler=msvc
+compiler.cppstd=17
+compiler.runtime=dynamic
+compiler.version=194
+os=Windows
+```
+
+Linux(Ubuntu 기준):
+`compiler.cppstd`의 값을 변경하여 C++ 표준 버전을 수정합니다. 다음 예제에서는 gnu14를 gnu17로 변경하였습니다.
+```
+[settings]
+arch=x86_64
+build_type=Release
+compiler=gcc
+
+# gun14에서 gun17로 수정하여 C++17 사용 가능하도록 설정 변경
+compiler.cppstd=gnu17
+compiler.libcxx=libstdc++11
+compiler.version=11
+os=Linux
+```
 
 ## 참고
 
