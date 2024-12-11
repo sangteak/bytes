@@ -14,7 +14,7 @@ set_property(TARGET ${TARGET}
 
 target_include_directories(${TARGET}
     PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/Include
 )
 
 target_link_libraries(${TARGET} ${CONANDEPS_LEGACY})
